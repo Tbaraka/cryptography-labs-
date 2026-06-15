@@ -80,6 +80,3 @@ Given three Base64-encoded ciphertexts encrypted with a repeating-key XOR cipher
 python3 "cryptographic failure brute force .py"
 ```
 
-## License
-
-No license file is currently included. Add one (e.g. MIT) if you want others to be able to reuse this code.
