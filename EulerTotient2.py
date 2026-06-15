@@ -68,7 +68,7 @@ def coprimes_of(n: int) -> list[int]:
 # ── Display Helper ──────────────────────────────────────────────────────────
 
 def section(title: str) -> None:
-    print(f"\n{'─' * 52}")
+    print(f"\n{'─' * 52}") 3
     print(f"  {title}")
     print(f"{'─' * 52}")
 
