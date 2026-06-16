@@ -1,50 +1,73 @@
-#include<iostream>
-#include <stdio.h>
-using namespace std;
-// Function to compute a^m mod n
+#include <iostream>
+#include <cstdio>
+#include <random>
 
+using namespace std;
+
+// Function to compute a^m mod n using fast exponentiation
 int compute(int a, int m, int n)
 {
-int r;
-int y = 1;
-while (m > 0)
-{
-r = m % 2;
-// fast exponention
-if (r == 1)
-y = (y*a) % n;
-a = a*a % n;
-m = m / 2;
+    int r;
+    int y = 1;
+
+    while (m > 0)
+    {
+        r = m % 2;
+
+        if (r == 1)
+            y = (y * a) % n;
+
+        a = (a * a) % n;
+        m = m / 2;
+    }
+
+    return y;
 }
-return y;
-}
-// C program to demonstrate Diffie-Hellman algorithm
+
+// Diffie-Hellman Key Exchange
 int main()
 {
-int p = 23; // modulus
-int g = 5; // base
-int a, b; // a - Alice's Secret Key, b - Bob's Secret Key.
-int A, B; // A - Alice's Public Key, B - Bob's Public Key
+    int p = 23; // Prime modulus
+    int g = 5;  // Generator
 
+    int a, b;   // Private keys
+    int A, B;   // Public keys
 
+    // Random number generator
+    random_device rd;
+    mt19937 gen(rd());
 
-// choose secret integer for Alice's Pivate Key (only known to Alice)
-a = 6; // or use rand()
+    // Generate random private keys between 1 and p-2
+    uniform_int_distribution<> dist(1, p - 2);
 
+    a = dist(gen); // Alice's private key
+    b = dist(gen); // Bob's private key
 
-// Calculate Alice's Public Key (Alice will send A to Bob)
-A = compute(g, a, p);
+    // Generate public keys
+    A = compute(g, a, p);
+    B = compute(g, b, p);
 
-// choose secret integer for Bob's Pivate Key (only known to Bob)
-b = 15; // or use rand()
+    // Compute shared secret keys
+    int keyA = compute(B, a, p);
+    int keyB = compute(A, b, p);
 
-// Calculate Bob's Public Key (Bob will send B to Alice)
-B = compute(g, b, p);
-// Alice and Bob Exchanges their Public Key A & B with each other
+    // Display results
+    cout << "Prime (p): " << p << endl;
+    cout << "Generator (g): " << g << endl;
 
-// Find Secret key
-int keyA = compute(B, a, p);
-int keyB = compute(A, b, p);
-printf("Alice's Secret Key is %d\nBob's Secret Key is %d", keyA, keyB);
-return 0;
+    cout << "\nAlice Private Key: " << a << endl;
+    cout << "Alice Public Key: " << A << endl;
+
+    cout << "\nBob Private Key: " << b << endl;
+    cout << "Bob Public Key: " << B << endl;
+
+    cout << "\nAlice's Secret Key: " << keyA << endl;
+    cout << "Bob's Secret Key: " << keyB << endl;
+
+    if (keyA == keyB)
+        cout << "\nShared Secret Established Successfully!" << endl;
+    else
+        cout << "\nKey Exchange Failed!" << endl;
+
+    return 0;
 }
